@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutterhackathon_firecode/locator.dart';
+import 'package:flutterhackathon_firecode/models/positionmodel.dart';
 import 'package:flutterhackathon_firecode/models/usermodel.dart';
 import 'package:flutterhackathon_firecode/repository/repository.dart';
 import 'package:flutterhackathon_firecode/services/auth/authbase.dart';
@@ -133,7 +134,23 @@ class ViewModel with ChangeNotifier implements AuthBase {
     return result;
   }
     Future<String> uploadFile(String userID, String fileType, File document)async {
-    var result = await _userRepository.uploadFile(userID,fileType,document);
-    return result;
+      try{
+        viewState = ViewState.Busy;
+        var result = await _userRepository.uploadFile(userID,fileType,document);
+        return result;
+      }finally{
+        viewState = ViewState.Idle;
+      }
+    
+  }
+
+  Future<bool> savePosition(PositionModel positionModel) async{
+    try{
+      viewState = ViewState.Busy;
+      var result = await _userRepository.savePosition(positionModel);
+      return result;
+    }finally{
+        viewState = ViewState.Idle;
+      }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutterhackathon_firecode/locator.dart';
+import 'package:flutterhackathon_firecode/models/positionmodel.dart';
 import 'package:flutterhackathon_firecode/models/usermodel.dart';
 import 'package:flutterhackathon_firecode/services/auth/fakeauthservice.dart';
 import 'package:flutterhackathon_firecode/services/auth/firebaseauthservice.dart';
@@ -103,6 +104,16 @@ class Repository implements AuthBase {
       var url =
           await _firebaseStorageService.uploadFile(userID, fileType, file);
       return url;
+    }
+  }
+
+
+  Future<bool> savePosition(PositionModel positionModel) async{
+    if(appMode==AppMode.DEBUG){
+      return true;
+    }else{
+      var result=await _fireStoreDBService.savePosition(positionModel);
+      return result;
     }
   }
 }

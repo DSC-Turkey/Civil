@@ -6,6 +6,7 @@ import 'package:flutterhackathon_firecode/ui/rewardpage.dart';
 import 'package:flutterhackathon_firecode/ui/uploadpage.dart';
 import 'package:flutterhackathon_firecode/viewmodel/viewmodel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,11 +16,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState(){
+    getPermission();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     final _userviewmodel = Provider.of<ViewModel>(context);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      // backgroundColor: Color.fromRGBO(252, 242, 239, 1.0),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -49,22 +54,23 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(_userviewmodel.userModel.email.toString(),style: TextStyle(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold, fontSize: 15.0)),
-            Divider(height: 5,),
-            Text("Hoşgeldin!",
-                style: Theme.of(context).textTheme.headline6.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 35.0)),
-            Divider(
-              height: 20,
+            
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text("Hoşgeldin!",
+                  style: Theme.of(context).textTheme.headline6.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 35.0)),
             ),
+          
             Container(
               margin: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Padding(
               padding: const EdgeInsets.all(8.0),
               
                   child: Text(
-                "Çevreni iyileştirmek ister misin?.\nHadi başlayalım!",
+                "Çevreni iyileştirmek ister misin?\nHadi başlayalım!",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.0),
               ),
@@ -74,7 +80,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.announcement, size: 30),
+        child: Icon(Icons.camera, size: 30),
         onPressed: () {
            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>UploadPage()));
            
@@ -107,5 +113,48 @@ class _HomePageState extends State<HomePage> {
     final _userviewmodel = Provider.of<ViewModel>(context, listen: false);
     bool sonuc = await _userviewmodel.signOut();
     return sonuc;
+  }
+  void getPermission() async {
+    try {
+      LocationPermission _permission = await Geolocator.checkPermission();
+      debugPrint("permission: " + _permission.toString());
+
+      bool isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      debugPrint("++" + isLocationServiceEnabled.toString());
+
+      if (_permission == LocationPermission.always ||
+          _permission == LocationPermission.whileInUse) {
+        getLocation();
+      } else {
+        // Future _per = GeolocatorPlatform.instance.isLocationServiceEnabled();
+        LocationPermission permission = await Geolocator.checkPermission();
+        bool _bool = await Geolocator.openLocationSettings();
+        if (permission == LocationPermission.denied && _bool == false) {
+          await Geolocator.requestPermission();
+          await Geolocator.openLocationSettings();
+        } else {
+          getLocation();
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void getLocation() async {
+    try {
+      Position _currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      var _position = _currentPosition;
+
+      
+    } catch (e) {
+      PlatformAlertDialog(
+              title: "Hata!!!",
+              content: "Konum bilginiz sağlanamıyor",
+              mainaction: "Tamam")
+          .show(context);
+    }
   }
 }

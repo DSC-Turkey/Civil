@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhackathon_firecode/common/loginbutton.dart';
 import 'package:flutterhackathon_firecode/common/platformalertdialog.dart';
@@ -33,23 +34,24 @@ class _LoginState extends State<Login> {
       body: Container(
         width: size.width,
         height: size.height,
-        // padding: EdgeInsets.all(16.0),
         child: Stack(
           children: [
-           /* Positioned(
+            Positioned(
                 child: Container(
               child: 
               
               FlareActor(
-                "assets/Moody.flr",
-                fit: BoxFit.cover,
+                "assets/img/WorldSpin.flr",
+                fit: BoxFit.contain,
                 isPaused: false,
                 shouldClip: true,
-                animation: "mood",
+                animation: "roll",
+                alignment: Alignment.center
               ),
-            )),*/
+            )),
+           
             Positioned(
-              top: 350,
+              top: 600,
               left: 0,
               right: 0,
               child: Container(

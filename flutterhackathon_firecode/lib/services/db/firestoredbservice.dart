@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterhackathon_firecode/models/positionmodel.dart';
 import 'package:flutterhackathon_firecode/models/usermodel.dart';
 import 'package:flutterhackathon_firecode/services/db/dbbase.dart';
 
@@ -28,5 +29,15 @@ class FireStoreDBService implements DBBase {
     } else {
       return true;
     }
+  }
+
+  @override
+  Future<bool> savePosition(PositionModel positionModel) async{
+    var _docID = _fireStore.collection("Positions").doc().id;
+    await _fireStore
+        .collection("Positions")
+        .doc("Users").collection(positionModel.user.userID).doc(_docID)
+        .set(positionModel.toMap());
+    return true;
   }
 }
