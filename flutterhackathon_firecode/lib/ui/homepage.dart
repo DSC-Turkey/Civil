@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhackathon_firecode/common/platformalertdialog.dart';
 import 'package:flutterhackathon_firecode/exceptions.dart';
@@ -15,21 +16,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseMessaging _firebaseMessaging=FirebaseMessaging.instance;
+ 
   @override
   void initState(){
+    _firebaseMessaging.subscribeToTopic("all");
+    _firebaseMessaging.getInitialMessage();
     getPermission();
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+  
     final _userviewmodel = Provider.of<ViewModel>(context);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Ana Sayfa", style: Theme.of(context).textTheme.headline6),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("CIVIL", style: Theme.of(context).textTheme.headline6),
+        ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(icon: Icon(FontAwesomeIcons.heart,color: Theme.of(context).primaryColor), onPressed:() {}),
+                Text("0",style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 20.0),)
+              ],
+              
+            ),
+          ),
+          
           IconButton(
               icon: Icon(
                 FontAwesomeIcons.medal,
@@ -53,6 +74,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image(image: AssetImage('assets/img/logo.png')),
             Text(_userviewmodel.userModel.email.toString(),style: TextStyle(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold, fontSize: 15.0)),
             
             Padding(

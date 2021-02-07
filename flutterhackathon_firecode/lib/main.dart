@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (BuildContext context) => ViewModel(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Fire Code',
+          title: 'CIVIL',
           theme: ThemeData(
               scaffoldBackgroundColor: Color.fromRGBO(252, 242, 239, 1.0),
               textTheme:

@@ -5,6 +5,7 @@ import 'package:flutterhackathon_firecode/common/loginbutton.dart';
 import 'package:flutterhackathon_firecode/common/platformalertdialog.dart';
 import 'package:flutterhackathon_firecode/models/positionmodel.dart';
 import 'package:flutterhackathon_firecode/models/usermodel.dart';
+import 'package:flutterhackathon_firecode/ui/rewardpage.dart';
 import 'package:flutterhackathon_firecode/viewmodel/viewmodel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -51,148 +52,192 @@ class _UploadPageState extends State<UploadPage> {
             style: Theme.of(context).textTheme.headline6),
       ),
       body: _locate == true
-          ? ListView(
-              shrinkWrap: true,
+          ? Stack(
               children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    
-                    children: [
-                      
-                      Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.camera,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Fotoğraflar"),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      GridView.count(
-                        shrinkWrap: true,
-                        primary: false,
-                        padding: EdgeInsets.all(20),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        crossAxisCount: 2,
-                        children: [
-                          GestureDetector(
-                            onTap: () => photoShot1(context),
-                            child: Container(
-                              color: Colors.black12,
-                              child: _photo1 == null
-                                  ? Icon(
-                                      FontAwesomeIcons.plus,
-                                      color: Colors.black,
-                                    )
-                                  : Image.file(
-                                      _photo1,
-                                      fit: BoxFit.fill,
+                Positioned(
+                  child: Container(
+                    width: size.width,
+                    height: size.height,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.camera,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("Fotoğraflar"),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              GridView.count(
+                                shrinkWrap: true,
+                                primary: false,
+                                padding: EdgeInsets.all(20),
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                crossAxisCount: 2,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => photoShot1(context),
+                                    child: Container(
+                                      color: Colors.black12,
+                                      child: _photo1 == null
+                                          ? Icon(
+                                              FontAwesomeIcons.plus,
+                                              color: Colors.black,
+                                            )
+                                          : Image.file(
+                                              _photo1,
+                                              fit: BoxFit.fill,
+                                            ),
                                     ),
-                            ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => photoShot2(context),
+                                    child: Container(
+                                        color: Colors.black12,
+                                        child: _photo2 == null
+                                            ? Icon(FontAwesomeIcons.plus,
+                                                color: Theme.of(context)
+                                                    .primaryColor)
+                                            : Image.file(
+                                                _photo2,
+                                                fit: BoxFit.fill,
+                                              )),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Center(
+                                        child: Text("Önce",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15.0))),
+                                    Center(
+                                        child: Text("Sonra",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15.0)))
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: SocialLoginButton(
+                                  buttonText: "Yükle",
+                                  buttonColor: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    if (_photo1 == null || _photo2 == null) {
+                                      PlatformAlertDialog(
+                                              title: "Geçersiz İşlem",
+                                              content: "Fotoğraf Boş Olamaz",
+                                              mainaction: "Tamam")
+                                          .show(context);
+                                    } else {
+                                      uploadFile(context);
+                                      savePosition(PositionModel(
+                                          user: _userviewmodel.userModel,
+                                          position: LatLng(_position.latitude,
+                                              _position.longitude)));
+                                    }
+                                  },
+                                  buttonIcon: Icon(Icons.send),
+                                ),
+                              ),
+                            ],
                           ),
-                          GestureDetector(
-                            onTap: () => photoShot2(context),
-                            child: Container(
-                                color: Colors.black12,
-                                child: _photo2 == null
-                                    ? Icon(FontAwesomeIcons.plus,
-                                        color: Theme.of(context).primaryColor)
-                                    : Image.file(
-                                        _photo2,
-                                        fit: BoxFit.fill,
-                                      )),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Center(
-                                child: Text("Önce",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15.0))),
-                            Center(
-                                child: Text("Sonra",
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 400,
+                  child: Container(
+                    width: size.width,
+                    child: Text("Nasıl Çalışır?",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25.0)),
+                  ),
+                ),
+                Positioned(
+                    top: 450,
+                    child: Container(
+                      width: size.width,
+                      height: size.width,
+                      child: ListView.builder(
+                        itemCount: _how.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                elevation: 10,
+                                child: ListTile(
+                                  leading: Icon(Icons.nature_people_sharp),
+                                  title: Text(
+                                    _how[i].title,
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15.0)))
-                          ],
-                        ),
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SocialLoginButton(
-                          buttonText: "Yükle",
-                          buttonColor: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            if (_photo1 == null || _photo2 == null) {
-                              PlatformAlertDialog(
-                                      title: "Geçersiz İşlem",
-                                      content: "Fotoğraf Boş Olamaz",
-                                      mainaction: "Tamam")
-                                  .show(context);
-                            } else {
-                              uploadFile(context);
-                              savePosition(PositionModel(
-                                  user: _userviewmodel.userModel,
-                                  position: LatLng(_position.latitude,
-                                      _position.longitude)));
-                            }
-                          },
-                          buttonIcon: Icon(Icons.send),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                    )),
               ],
             )
           : Container(
-            width: size.width,
-            height: size.height,
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
+              width: size.width,
+              height: size.height,
+              child: Stack(alignment: AlignmentDirectional.center, children: [
                 Positioned(
-                                  child: Container(
-                    child: FlareActor(
-                "assets/img/lightbulb.flr",
-                fit: BoxFit.scaleDown,
-                isPaused: false,
-                shouldClip: true,
-                animation: "lightOff",
-                alignment: Alignment.center
-              ),
+                  child: Container(
+                    child: FlareActor("assets/img/lightbulb.flr",
+                        fit: BoxFit.scaleDown,
+                        isPaused: false,
+                        shouldClip: true,
+                        animation: "lightOff",
+                        alignment: Alignment.center),
                   ),
                 ),
                 Positioned(
                   top: 630,
-
-                                 child:  
-                                       Container(
-                                         child: Text("Konum izni vermeniz gerekmektedir!",
-                              style: Theme.of(context).textTheme.headline6.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 15.0)),
-                                       ),
-                                    
-                  
+                  child: Container(
+                    child: Text("Konum izni vermeniz gerekmektedir!",
+                        style: Theme.of(context).textTheme.headline6.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 15.0)),
+                  ),
                 ),
               ]),
-          ),
+            ),
     );
   }
 
@@ -346,3 +391,25 @@ class _UploadPageState extends State<UploadPage> {
     await _userViewModel.savePosition(positionModel);
   }
 }
+
+class How {
+  final String title;
+ 
+
+  How({this.title});
+}
+
+List<How> _how = <How>[
+  How(
+      title: "Kirli Gördüğünüz Alanın Fotoğrafını Çekin",
+      ),
+  How(
+      title: "Temizlediğiniz Alanın Fotoğranı Çekin",
+     ),
+  How(
+      title: "Kontrol Sonrasında Puanınız Yüklenecektir",
+    ),
+  How(
+      title: "Puanlarınızla Hediyelerin Keyfini Çıkarın",
+      )
+];
