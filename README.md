@@ -17,3 +17,9 @@ Arayüz dosyalarını ve tasarımları içermektedir.
 # ScreenShots
 <img src="flutterhackathon_firecode/assets/img/cıvıl1.jpg" width="200"> <img src="flutterhackathon_firecode/assets/img/cıvıl2.jpg" width="200"> <img src="flutterhackathon_firecode/assets/img/cıvil3.jpg" width="200"> 
 <img src="flutterhackathon_firecode/assets/img/civil4.jpg" width="200"> <img src="flutterhackathon_firecode/assets/img/cıvıl5.jpg" width="200"> <img src="flutterhackathon_firecode/assets/img/cıvıl7.jpg" width="200">
+
+# Reference
+For Rive Images
+"WorldSpin" - **Argel Bejarano** 
+"Light bulb on/off" - **Rick Borkhuis**
+
